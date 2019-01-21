@@ -49,6 +49,7 @@
     <None Include="Program.fsx" />
     <Compile Include="Types.fs" />
     <None Include="App.config" />
+    <Compile Include="Operations.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
