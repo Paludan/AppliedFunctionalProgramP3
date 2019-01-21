@@ -19,7 +19,6 @@ module Types =
     }
 
     and Project = {
-        title: string
         description: string
         supervisor: Teacher
         coSupervisor: Teacher list option
@@ -33,10 +32,9 @@ module Types =
     }
 
     and ProjectDatabase = {
-        study: string
-        projectMap: Map<int, Project>
+        projectMap: Map<(int * string), Project>
     }
-
+    
     and HeadOfStudies = {
         name: string
         study: string
