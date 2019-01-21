@@ -19,6 +19,7 @@ module Types =
     }
 
     and Project = {
+        projectName: string
         description: string
         supervisor: Teacher
         coSupervisor: Teacher list option
