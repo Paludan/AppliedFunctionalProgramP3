@@ -3,12 +3,10 @@ namespace P3
 module Types =
     type Student = {
         name: string
-        ID: int
-        study: string
     }
 
     and Group = {
-        ID: int
+        GID: int
         members: Student list
         projectPriorities: Project list
     }
@@ -23,6 +21,7 @@ module Types =
         description: string
         supervisor: Teacher
         coSupervisor: Teacher list option
+        Groups: Group list option
         limits: Limitations
     }
 
@@ -35,8 +34,15 @@ module Types =
     and ProjectDatabase = {
         projectMap: Map<(int * string), Project>
     }
-    
+
     and HeadOfStudies = {
-        name: string
-        study: string
+        teacher: Teacher
+    }
+    
+    and Study = {
+        AcceptedMap: Map<int, Project> // Projects accepted (PID -> Project)
+        ProposedMap: Map<int, Project> // Projects proposed (PID -> Project)
+        StudentMap:  Map<int, Student> // Student database (SID -> Student)
+        Groups:      Map<int, Group>   // Groups (GID -> Group)
+        Head:        HeadOfStudies
     }
