@@ -8,7 +8,7 @@ module Types =
     and Group = {
         mutable GID: int
         mutable members: Student list
-        mutable projectPriorities: Project list
+        mutable projectPriorities: int list
     }
 
     and Teacher = {
