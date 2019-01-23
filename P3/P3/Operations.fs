@@ -45,3 +45,10 @@ module Operations =
                                     | None   -> true
                                 ) gs).Length
         | None   -> true
+
+    let addGroup (g : Group) (pId : int) (study : Study) = 
+        match study.AcceptedMap.TryFind pId with
+        | Some x -> match x.Groups with 
+                    | Some l -> x.Groups <- Some (g::l)
+                    | None   -> x.Groups <- Some [g]
+        | None -> failwith ""
