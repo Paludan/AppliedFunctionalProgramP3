@@ -8,7 +8,7 @@ module Types =
     and Group = {
        GID: int
        members: Student list
-       projectPriorities: Project list
+       projectPriorities: int list
     }
 
     and Teacher = {
