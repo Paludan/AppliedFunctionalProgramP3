@@ -23,8 +23,10 @@ module Operations =
     let reviewGroups (study : Study) = 
         let groupList = Map.fold (fun acc _ g -> 
                                 let projNames =
-                                    List.foldBack (fun p acc -> 
-                                                    p.projectName :: acc
+                                    List.foldBack (fun pid acc -> 
+                                                    match study.AcceptedMap.TryFind pid with 
+                                                    | Some x -> x.projectName :: acc
+                                                    | None   -> failwith "Project not found in Database!"
                                                 ) g.projectPriorities []
                                 let students = 
                                     List.foldBack (fun (m : Student) acc -> 
@@ -48,7 +50,11 @@ module Operations =
 
     let addGroup (g : Group) (pId : int) (study : Study) = 
         match study.AcceptedMap.TryFind pId with
-        | Some x -> match x.Groups with 
-                    | Some l -> x.Groups <- Some (g::l)
-                    | None   -> x.Groups <- Some [g]
-        | None -> failwith ""
+        | Some p -> match p.Groups with 
+                    | Some l -> { study with 
+                                    AcceptedMap = study.AcceptedMap.Add(pId, { p with Groups = Some (g::l) })
+                                } 
+                    | None   -> { study with 
+                                    AcceptedMap = study.AcceptedMap.Add(pId, { p with Groups = Some [g] })
+                                }
+        | None -> failwith "Project not in Database!"
