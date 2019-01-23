@@ -2,47 +2,47 @@ namespace P3
 
 module Types =
     type Student = {
-        mutable name: string
+        name: string
     }
 
     and Group = {
-        mutable GID: int
-        mutable members: Student list
-        mutable projectPriorities: Project list
+       GID: int
+       members: Student list
+       projectPriorities: Project list
     }
 
     and Teacher = {
-        mutable name: string
-        mutable department: string
+       name: string
+       department: string
     }
 
     and Project = {
-        mutable projectName: string
-        mutable description: string
-        mutable supervisor: Teacher
-        mutable coSupervisor: Teacher list option
-        mutable Groups: Group list option
-        mutable limits: Limitations
+       projectName: string
+       description: string
+       supervisor: Teacher
+       coSupervisor: Teacher list option
+       Groups: Group list option
+       limits: Limitations
     }
 
     and Limitations = {
-        mutable prereq: string list option
-        mutable maxSize: int option
-        mutable maxGroups: int option
+       prereq: string list option
+       maxSize: int option
+       maxGroups: int option
     }
 
     and ProjectDatabase = {
-        mutable projectMap: Map<(int * string), Project>
+       projectMap: Map<(int * string), Project>
     }
 
     and HeadOfStudies = {
-        mutable teacher: Teacher
+       teacher: Teacher
     }
 
     and Study = {
-        mutable AcceptedMap: Map<int, Project> // Projects accepted (PID -> Project)
-        mutable ProposedMap: Map<int, Project> // Projects proposed (PID -> Project)
-        mutable StudentMap:  Map<int, Student> // Student database (SID -> Student)
-        mutable Groups:      Map<int, Group>   // Groups (GID -> Group)
-        mutable Head:        HeadOfStudies
+       AcceptedMap: Map<int, Project> // Projects accepted (PID -> Project)
+       ProposedMap: Map<int, Project> // Projects proposed (PID -> Project)
+       StudentMap:  Map<int, Student> // Student database (SID -> Student)
+       Groups:      Map<int, Group>   // Groups (GID -> Group)
+       Head:        HeadOfStudies
     }
