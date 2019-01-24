@@ -27,12 +27,8 @@ module Types =
 
     and Limitations = {
        prereq: string list option
-       maxSize: int option
+       maxSize: int option  
        maxGroups: int option
-    }
-
-    and ProjectDatabase = {
-       projectMap: Map<(int * string), Project>
     }
 
     and HeadOfStudies = {
