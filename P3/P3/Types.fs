@@ -3,6 +3,7 @@ namespace P3
 module Types =
     type Student = {
         name: string
+        email: string
     }
 
     and Group = {
@@ -13,6 +14,7 @@ module Types =
 
     and Teacher = {
        name: string
+       email: string
        department: string
     }
 
