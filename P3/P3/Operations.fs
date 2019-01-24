@@ -48,17 +48,6 @@ module Operations =
                                 ) gs).Length
         | None   -> true
 
-    let addGroup (g : Group) (pId : int) (study : Study) = 
-        match study.AcceptedMap.TryFind pId with
-        | Some p -> match p.Groups with 
-                    | Some l -> { study with 
-                                    AcceptedMap = study.AcceptedMap.Add(pId, { p with Groups = Some (g::l) })
-                                } 
-                    | None   -> { study with 
-                                    AcceptedMap = study.AcceptedMap.Add(pId, { p with Groups = Some [g] })
-                                }
-        | None -> failwith "Project not in Database!"
-
     let lookupGroupPriorities group study =
         let projList = List.map (fun pid -> study.AcceptedMap.TryFind pid) group.projectPriorities
         let projNameList = List.map (
@@ -86,34 +75,37 @@ module Operations =
                                                 let gList' = List.filter (fun g -> g.GID <> group.GID) gList
                                                 let gOpt' = if (List.isEmpty gList') then None else Some(gList')
                                                 (k,{p with Groups = gOpt'})
+                                            | None -> failwith "No groups"
                                         ) prevAssignedProj
         prevAssignedProj
 
 
-    let assignToNewProj group projID study =
-        let newProj = match study.AcceptedMap.TryFind projID with 
-                      | Some(proj) -> proj
-                      | None -> failwith "Project does not exists"
+    let assignToNewProj group (proj : Project) study =
+
         // add group to new project
-        let newProj' = match newProj.Groups with 
+        let newProj' = match proj.Groups with 
                        | Some(gList) -> 
                             let gList' = group :: gList 
                             let gOpt' = if (List.isEmpty gList') then None else Some(gList')
-                            {newProj with Groups = gOpt'}
-                       | None -> {newProj with Groups = Some([group])}
+                            {proj with Groups = gOpt'}
+                       | None -> {proj with Groups = Some([group])}
         newProj'
 
-    let assignGroup group projID study = 
-        let prevAssignedProj = unassignCurrentProject group study
-        
-        let newProj = assignToNewProj group projID study
+    let assignGroup group projID study =
+        match study.AcceptedMap.TryFind projID with
+        | Some p when checkLimits p ->
+            let prevAssignedProj = unassignCurrentProject group study 
 
-        let newAcceptedMap = List.fold (fun mapPrev list -> 
-                                Map.remove (fst list) mapPrev 
-                                |> Map.add (fst list) (snd list)
-                             ) study.AcceptedMap prevAssignedProj
-                             |> Map.remove projID 
-                             |> Map.add projID newProj
-        // return study with changed assignment
-        let tmpStudy = {study with AcceptedMap = newAcceptedMap}
-        tmpStudy
+            let newProj = assignToNewProj group p study
+
+            let newAcceptedMap = List.fold (fun mapPrev list -> 
+                                    Map.remove (fst list) mapPrev 
+                                    |> Map.add (fst list) (snd list)
+                                 ) study.AcceptedMap prevAssignedProj
+                                 |> Map.remove projID 
+                                 |> Map.add projID newProj
+            // return study with changed assignment
+            let tmpStudy = {study with AcceptedMap = newAcceptedMap}
+            tmpStudy
+        | Some p -> failwith "Project exeeds limitations set!"
+        | None   -> failwith "Project not found in Database!"
